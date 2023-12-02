@@ -286,7 +286,7 @@ In this example, the algorithm has determined that the variable x lies in the ra
   
       print(v.name, "=", v.varValue)
 
-The algorithm follows the steps as explained in the above illustration.
+The algorithm follows the steps as explained in the example illustration.
 
 
 
