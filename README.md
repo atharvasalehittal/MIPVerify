@@ -322,6 +322,10 @@ blob/master/models/mnist.pth.
 
 – LPd-RES is the resnet CIFAR classifier in Wong et al. (2018), and can be found at https://github.com/locuslab/convex_adversarial/ blob/master/models_scaled/cifar_resnet_8px.pth.
 
+2. Briefly describe the tools/techniques that were used for comparison
+   
+To give a sense for how our verifier performs with other solvers, we ran a comparison with the Cbc (Forrest et al., 2018) and GLPK (Makhorin, 2012) solvers, two open-source MILP solvers.
+
 
 
 
