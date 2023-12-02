@@ -108,7 +108,29 @@ The results can be summarised as below:
 
 -1 ≤ x<sub>0,1</sub> , x<sub>0,2</sub> ≤ 1
 
-0 ≤ x<sub>1,1</sub> , x<sub>1,2</sub> ≤ 10
+ 0 ≤ x<sub>1,1</sub> , x<sub>1,2</sub> ≤ 10
 
-−1 ≤ x<sub>2,1</sub> ≤1
+−1 ≤ x<sub>2,1</sub> ≤ 1
+
+# Step 7: Binary Activation Constraints
+
+For each ReLU unit in the hidden layer:
+
+z<sub>1,1</sub> = 1 → x<sub>1,1</sub> ≤ 0
+
+z<sub>1,1</sub> = 0 → x<sub>1,1</sub> ≥ 0
+
+z<sub>1,2</sub> = 1 → x<sub>1,2</sub> ≤ 0
+
+z<sub>1,2</sub> = 0 → x<sub>1,2</sub> ≥ 0
+
+
+# Step 8: Solve
+
+Solve the MILP model using an optimization solver. 
+
+With the above parameters we can use an MILP solver such as Gurobi, CPLEX, and PuLP (for Python) to find the optimal solution for the given DNN. The solver will find the optimal values for the decision variables x<sub>0,1</sub> , x<sub>0,2</sub> , x<sub>1,1</sub> , x<sub>1,2</sub> , x<sub>2,1</sub> and binary variables z<sub>1,1</sub> , z<sub>1,2</sub> that minimize the objective function c<sub>2,1</sub>x2,1</sub>
+
+
+
 
