@@ -131,6 +131,167 @@ Solve the MILP model using an optimization solver.
 
 With the above parameters we can use an MILP solver such as Gurobi, CPLEX, and PuLP (for Python) to find the optimal solution for the given DNN. The solver will find the optimal values for the decision variables x<sub>0,1</sub> , x<sub>0,2</sub> , x<sub>1,1</sub> , x<sub>1,2</sub> , x<sub>2,1</sub> and binary variables z<sub>1,1</sub> , z<sub>1,2</sub> that minimize the objective function c<sub>2,1</sub>x2,1</sub>
 
+# Algorithm Description
+
+1.) Algorithm to calculate upper and lower bound
+
+    function calculate_bounds(x):
+      lbest = -1  // initialize best known lower bound on x
+      ubest = 1   // initialize best known upper bound on x
+    
+    for each f in fs:
+        // Tighten upper bound
+        u = f(x, boundType='upper')
+        ubest = min(ubest, u)
+        
+        // Early return if x is non-positive
+        if ubest <= 0:
+            return (lbest, ubest)
+        
+        // Tighten lower bound
+        l = f(x, boundType='lower')
+        lbest = max(lbest, l)
+        
+        // Early return if x is non-negative
+        if lbest >= 0:
+            return (lbest, ubest)
+    
+    // Return the final bounds
+    return (lbest, ubest)
+
+Explanation of the algorithm with intial value of x = 3
+
+Initialization:
+
+x = 3
+
+lbest = -1
+
+ubest = 1
+
+Iterative Process:
+
+Iteration 1 (f1):
+
+Tighten Upper Bound: u = f1(3, 'upper') evaluates to 6, so ubest becomes 1 (min of current ubest and u).
+
+Tighten Lower Bound: l = f1(3, 'lower') evaluates to 3, so lbest becomes 3 (max of current lbest and l).
+
+Iteration 2 (f2):
+
+Tighten Upper Bound: u = f2(3, 'upper') evaluates to 9, so ubest becomes 1 (min of current ubest and u).
+
+Tighten Lower Bound: l = f2(3, 'lower') evaluates to -3, so lbest remains 3 (no change).
+
+Iteration 3 (f3):
+
+Tighten Upper Bound: u = f3(3, 'upper') evaluates to 8, so ubest becomes 1 (min of current ubest and u).
+
+Tighten Lower Bound: l = f3(3, 'lower') evaluates to -6, so lbest remains 3 (no change).
+
+Final Result:
+
+Return the final bounds: (lbest, ubest) = (3, 1)
+
+In this example, the algorithm has determined that the variable x lies in the range [3, 1]. The bounds were iteratively tightened by evaluating the provided functions for both upper and lower bounds. The early returns help optimize the process if it is determined that x is non-positive or non-negative during the iterations.
+
+2.) Algorithm to create a 0-1 Mixed Integer Linear Programming Model for Optimization
+
+  Example MILP model for a simple DNN with one hidden layer
+  
+  using a Python modeling language like PuLP
+
+    from pulp import LpVariable, LpProblem, LpBinary, lpSum
+
+  Step 1: Define Notation
+  
+    N = 3  # Number of input nodes
+  
+    M = 2  # Number of hidden nodes
+  
+    K = 1  # Number of output nodes
+
+  Step 2: Define Variables
+  
+    x = LpVariable.dicts("x", ((i, j) for i in range(1, N+1) for j in range(1, M+1)), cat=LpBinary)
+  
+    y = LpVariable.dicts("y", (j for j in range(1, M+1)), cat=LpBinary)
+
+  Step 3: Formulate ReLU Activation Constraints
+  
+    a = [[1, -1], [-2, 1], [1, 0]]  # Example input to hidden weights
+  
+    b = [[2, -1]]  # Example hidden to output weights
+  
+    M = 1000  # A large constant
+
+  Formulate ReLU activation constraints for hidden layer
+
+    for i in range(1, N+1):
+
+      for j in range(1, M+1):
+          prob += a[i-1][j-1] * x[i, j] <= z[i, j]
+          
+          prob += z[i, j] <= a[i-1][j-1] + M * (1 - x[i, j])
+
+  Formulate ReLU activation constraints for output layer
+  
+    for k in range(1, K+1):
+  
+      for j in range(1, M+1):
+      
+          prob += b[j-1][k-1] * y[j] <= z[j, k]
+          
+          prob += z[j, k] <= b[j-1][k-1] + M * (1 - y[j])
+
+  Step 4: Formulate Output Layer Constraints
+  
+    threshold = [1]  # Example threshold for the output node
+  
+    for k in range(1, K+1):
+  
+      prob += lpSum(z[j, k] for j in range(1, M+1)) >= threshold[k-1]
+
+  Step 5: Objective Function
+  
+    prob += lpSum(x[i, j] for i in range(1, N+1) for j in range(1, M+1)) + lpSum(y[j] for j in range(1, M+1))
+
+  Step 6: Bounds (Binary variables)
+
+  Using the algorithm-1 to calculate bounds
+
+  Step 7: Binary Activation Constraints
+  
+    Hidden layer
+  
+    for j in range(1, M+1):
+  
+      prob += lpSum(x[i, j] for i in range(1, N+1)) == 1
+
+  Output layer
+  
+    for k in range(1, K+1):
+  
+      prob += lpSum(y[j] for j in range(1, M+1)) == 1
+
+  Step 8: Solve
+
+    prob.solve()
+
+  Display results
+  
+    print("Objective Value:", value(prob.objective))
+  
+    for v in prob.variables():
+  
+      print(v.name, "=", v.varValue)
+
+The algorithm follows the steps as explained in the above illustration.
+
+
+
+
+
 
 
 
