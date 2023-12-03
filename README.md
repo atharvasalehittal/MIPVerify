@@ -316,20 +316,20 @@ The algorithm follows the steps as explained in the example illustration.
 
    The paper discusses the formulation of robustness evaluation for classifiers using Mixed Integer Linear Programming (MILP) and focuses on two specific evaluation metrics: adversarial accuracy and mean minimum adversarial distortion. Here are the tools and techniques discussed:
 
-  1.) Tool: Mixed Integer Linear Programming (MILP
+  - Tool: Mixed Integer Linear Programming (MILP)
 
   Technique: The formulation involves defining a region G(x) in the input domain for allowable perturbations and determining robustness by comparing predicted probabilities for true and other labels. MILP is employed to express the feasibility problem and constraints associated with the robustness evaluation.
 Mean Minimum Adversarial Distortion Evaluation:
 
-  2.) Tool: MILP for optimization
+  - Tool: MILP for optimization
 
   Technique: The minimum adversarial distortion is determined using an optimization problem, minimizing the distance metric between the original input and the perturbed input subject to constraints. The formulation involves expressing the problem as an MILP, allowing for efficient computation of the minimum adversarial distortion. Piecewise-Linear Functions in MILP Framework
 
-  3.) Tool: MILP
+  - Tool: MILP
 
   Technique: Formulating ReLU (Rectified Linear Unit) and maximum functions using MILP. The ReLU formulation includes the use of indicator decision variables and linear constraints, ensuring tight formulations for efficient MILP solving. Similar formulations are provided for the maximum function. Progressive Bounds Tightening.
 
-  4.) Tool: Interval Arithmetic (IA), Linear Programming (LP)
+  - Tool: Interval Arithmetic (IA), Linear Programming (LP)
 
   Technique: To enhance problem tractability, progressive bounds tightening is employed. Coarse bounds are initially determined using fast procedures (IA), and bounds are refined using procedures with higher computational complexity (LP) only when necessary. This approach optimizes the trade-off between build times and solve times in MILP.
 
