@@ -314,23 +314,50 @@ The algorithm follows the steps as explained in the example illustration.
 
 2. Briefly describe the tools/techniques that were used for comparison
 
-  - The main approach is a Mixed-Integer Linear Programming (MILP) verifier with specific optimizations, such as progressive tightening, restricted input domain, and asymmetric bounds. Comparison is made against four other MILP-based complete verifiers that do not implement these optimizations.
+   The paper discusses the formulation of robustness evaluation for classifiers using Mixed Integer Linear Programming (MILP) and focuses on two specific evaluation metrics: adversarial accuracy and mean minimum adversarial distortion. Here are the tools and techniques discussed:
 
-3. Main evaluation results
-   
-   a.) Performance Comparisons with Other MILP-Based Complete Verifiers:
-   
-     - The MILP approach with optimizations outperforms others in terms of runtime.
+  1.) Tool: Mixed Integer Linear Programming (MILP
+
+  Technique: The formulation involves defining a region G(x) in the input domain for allowable perturbations and determining robustness by comparing predicted probabilities for true and other labels. MILP is employed to express the feasibility problem and constraints associated with the robustness evaluation.
+Mean Minimum Adversarial Distortion Evaluation:
+
+  2.) Tool: MILP for optimization
+
+  Technique: The minimum adversarial distortion is determined using an optimization problem, minimizing the distance metric between the original input and the perturbed input subject to constraints. The formulation involves expressing the problem as an MILP, allowing for efficient computation of the minimum adversarial distortion. Piecewise-Linear Functions in MILP Framework
+
+  3.) Tool: MILP
+
+  Technique: Formulating ReLU (Rectified Linear Unit) and maximum functions using MILP. The ReLU formulation includes the use of indicator decision variables and linear constraints, ensuring tight formulations for efficient MILP solving. Similar formulations are provided for the maximum function. Progressive Bounds Tightening.
+
+  4.) Tool: Interval Arithmetic (IA), Linear Programming (LP)
+
+  Technique: To enhance problem tractability, progressive bounds tightening is employed. Coarse bounds are initially determined using fast procedures (IA), and bounds are refined using procedures with higher computational complexity (LP) only when necessary. This approach optimizes the trade-off between build times and solve times in MILP.
+
+  The tools include MILP for robustness evaluation and optimization, while techniques encompass formulating piecewise-linear functions, progressive bounds tightening, and efficient optimization strategies within the MILP framework.
+
+4. Main evaluation results
+
+  Table 1: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-1.png
   
-     - Ablation tests show the significance of each optimization: progressive tightening, restricted input domain, and asymmetric bounds.
+   a.) Performance Comparisons with Other MILP-Based Complete Verifiers (Table-1):
+   
+    - The MILP approach with optimizations outperforms others in terms of runtime.
+  
+    - Ablation tests show the significance of each optimization: progressive tightening, restricted input domain, and asymmetric bounds.
 
-   b.) Comparisons to Other Complete and Incomplete Verifiers:
+  Figure1: https://github.com/atharvasalehittal/MIPVerify/blob/main/Figure-1.png
+
+  Figure2: https://github.com/atharvasalehittal/MIPVerify/blob/main/Figure-2.png
+
+   b.) Comparisons to Other Complete and Incomplete Verifiers (Figures-1 and 2):
 
      - Verification times for determining minimum targeted adversarial distortions on MNIST samples are two to three orders of magnitude faster than the state-of-the-art complete verifier Reluplex.
   
      - The MILP verifier provides better bounds than incomplete verifiers on minimum targeted adversarial distortions.
 
-   c.) Determining Adversarial Accuracy of MNIST and CIFAR-10 Classifiers:
+  Table2: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-2.png
+
+   c.) Determining Adversarial Accuracy of MNIST and CIFAR-10 Classifiers (Table-2):
 
      - Adversarial accuracy of various classifiers is determined for different perturbation bounds.
   
@@ -338,19 +365,27 @@ The algorithm follows the steps as explained in the example illustration.
   
      - The verifier performs well on both MNIST and CIFAR-10 datasets.
 
-   d.) Observations on Determinants of Verification Time:
+  Table3: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-3.png
+
+  Table6: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-6.png
+
+   d.) Observations on Determinants of Verification Time (Table-3 and Table-6):
 
      - Verification time is correlated with the number of ReLUs that are not provably stable and the number of labels that cannot be eliminated.
   
      - The restricted input domain significantly impacts verification time, proving stability for many ReLUs and eliminating labels.
+
+  Table4: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-4.png
   
-   e.) Performance of Verifier with Other MILP Solvers:
+   e.) Performance of Verifier with Other MILP Solvers (Table-4):
 
      - Verifier performance varies with different MILP solvers.
   
      - Even with open-source solvers like Cbc, the verifier outperforms existing lower and upper bounds.
 
-   f.) Additional Solve Statistics
+  Table5: https://github.com/atharvasalehittal/MIPVerify/blob/main/Table-5.png
+
+   f.) Additional Solve Statistics (Table 5):
 
      - Information on nodes explored during verification provides insights into the efficiency of the MILP search tree exploration.
    
